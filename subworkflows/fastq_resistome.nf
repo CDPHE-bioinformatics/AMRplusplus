@@ -17,16 +17,14 @@ workflow FASTQ_RESISTOME_WF {
 
     main:
         // download resistome and rarefactionanalyzer
+        resistomeanalyzer = file("${baseDir}/bin/resistome")
+        rarefactionanalyzer = file("${baseDir}/bin/rarefaction")
         if (file("${baseDir}/bin/AmrPlusPlus_SNP/SNP_Verification.py").isEmpty()){
             build_dependencies()
-            resistomeanalyzer = build_dependencies.out.resistomeanalyzer
-            rarefactionanalyzer = build_dependencies.out.rarefactionanalyzer
             amrsnp =  build_dependencies.out.amrsnp
         }
         else {
             amrsnp = file("${baseDir}/bin/AmrPlusPlus_SNP/*")
-            resistomeanalyzer = file("${baseDir}/bin/resistome")
-            rarefactionanalyzer = file("${baseDir}/bin/rarefaction")
         }
         // Define amr_index_files variable
         if (params.amr_index == null) {
@@ -57,7 +55,7 @@ workflow FASTQ_RESISTOME_WF {
         }
         // Add SNP confirmation
         if (params.snp == "Y") {
-            runsnp(bwa_align.out.bwa_bam, resistomeresults.out.snp_count_matrix)
+            runsnp(bwa_align.out.bwa_bam, resistomeresults.out.snp_count_matrix, amrsnp)
             snpresults(runsnp.out.snp_counts.collect() ,"AMR" )
         }
         // Add analysis of deduped counts
@@ -83,14 +81,12 @@ workflow MERGED_FASTQ_RESISTOME_WF {
     main:
         /* ------------ (1)  DEPENDENCIES -------------------------------------- */
 
+        resistomeanalyzer = file("${baseDir}/bin/resistome")
+        rarefactionanalyzer = file("${baseDir}/bin/rarefaction")
         if( !new File("${baseDir}/bin/AmrPlusPlus_SNP/SNP_Verification.py").exists() ) {
             build_dependencies()
-            resistomeanalyzer   = build_dependencies.out.resistomeanalyzer
-            rarefactionanalyzer = build_dependencies.out.rarefactionanalyzer
             amrsnp              = build_dependencies.out.amrsnp
         } else {
-            resistomeanalyzer   = file("${baseDir}/bin/resistome")
-            rarefactionanalyzer = file("${baseDir}/bin/rarefaction")
             amrsnp              = file("${baseDir}/bin/AmrPlusPlus_SNP/*")
         }
         /* ------------ (2)  AMR INDEX ----------------------------------------- */

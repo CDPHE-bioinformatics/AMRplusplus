@@ -27,36 +27,11 @@ process build_dependencies {
     publishDir "${baseDir}/bin/", mode: "copy"
 
     output:
-        path("rarefaction"), emit: rarefactionanalyzer
-        path("resistome"), emit: resistomeanalyzer
         path("AmrPlusPlus_SNP/*"), emit: amrsnp
-
     """
-    # Uncomment these sections once the v2 rarefactionanalyzer and resistomeanalyzer repositories are updated, remove cp lines
-    #git clone https://github.com/cdeanj/rarefactionanalyzer.git
-    #cd rarefactionanalyzer
-    #make
-    #chmod 777 rarefaction
-    #mv rarefaction ../
-    #cd ../
-    #rm -rf rarefactionanalyzer
-    cp $baseDir/bin/rarefaction . 
-
-
-    #git clone https://github.com/cdeanj/resistomeanalyzer.git
-    #cd resistomeanalyzer
-    #make
-    #chmod 777 resistome
-    #mv resistome ../
-    #cd ../
-    #rm -rf resistomeanalyzer
-    cp $baseDir/bin/resistome .
-
     git clone https://github.com/Isabella136/AmrPlusPlus_SNP.git
     chmod -R 777 AmrPlusPlus_SNP/
     """
-
-
 }
 
 
@@ -233,13 +208,12 @@ process runsnp {
     input:
         tuple val(sample_id), path(bam)
         path(snp_count_matrix)
+        path(amrsnp)
 
     output:
         path("${sample_id}.SNP_confirmed_gene.tsv"), emit: snp_counts
 
     """
-    cp -rsa $baseDir/bin/AmrPlusPlus_SNP/* .
-
     # change name to stay consistent with count matrix name, but only if the names don't match
     if [ "${bam}" != "${sample_id}.bam" ]; then
         mv ${bam} ${sample_id}.bam
@@ -267,6 +241,7 @@ process dev_runsnp {
     input:
         tuple val(sample_id), path(bam)
         path(snp_count_matrix)
+        path(amrsnp)
 
     output:
         path("${sample_id}.SNP_confirmed_gene.tsv"), emit: snp_counts
@@ -275,8 +250,6 @@ process dev_runsnp {
         path("${sample_id}.${prefix}_SNPs/${sample_id}/${sample_id}.${prefix}_SNPs_snp_verification_summary.csv")
 
     """
-    cp -rsa $baseDir/bin/AmrPlusPlus_SNP/* .
-
     # change name to stay consistent with count matrix name, but only if the names don't match
     if [ "${bam}" != "${sample_id}.bam" ]; then
         mv ${bam} ${sample_id}.bam

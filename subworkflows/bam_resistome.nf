@@ -10,16 +10,14 @@ workflow BAM_RESISTOME_WF {
 
     main:
         // download resistome and rarefactionanalyzer
+        resistomeanalyzer = file("${baseDir}/bin/resistome")
+        rarefactionanalyzer = file("${baseDir}/bin/rarefaction")
         if (file("${baseDir}/bin/AmrPlusPlus_SNP/SNP_Verification.py").isEmpty()){
             build_dependencies()
-            resistomeanalyzer = build_dependencies.out.resistomeanalyzer
-            rarefactionanalyzer = build_dependencies.out.rarefactionanalyzer
-            amrsnp =  build_dependencies.out.amrsnp
+            amrsnp = build_dependencies.out.amrsnp
         }
         else {
             amrsnp = file("${baseDir}/bin/AmrPlusPlus_SNP/*")
-            resistomeanalyzer = file("${baseDir}/bin/resistome")
-            rarefactionanalyzer = file("${baseDir}/bin/rarefaction")
         }
         // Split sections below for rarefaction and SNP confirmation
         runresistome(bam_ch,amr, annotation, resistomeanalyzer )
@@ -31,7 +29,7 @@ workflow BAM_RESISTOME_WF {
         }
         // Add SNP confirmation
         if (params.snp == "Y") {
-            runsnp(bam_ch, resistomeresults.out.snp_count_matrix)
+            runsnp(bam_ch, resistomeresults.out.snp_count_matrix, amrsnp)
             snpresults(runsnp.out.snp_counts.collect(), "AMR")
         }
 }

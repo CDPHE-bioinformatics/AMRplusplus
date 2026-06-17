@@ -10,21 +10,20 @@ workflow BAM_RESISTOME_COUNTS_WF {
 
     main:
         // download resistome and rarefactionanalyzer
+        resistomeanalyzer = file("${baseDir}/bin/resistome")
         if (file("${baseDir}/bin/AmrPlusPlus_SNP/SNP_Verification.py").isEmpty()){
             build_dependencies()
-            resistomeanalyzer = build_dependencies.out.resistomeanalyzer
             amrsnp =  build_dependencies.out.amrsnp
         }
         else {
             amrsnp = file("${baseDir}/bin/AmrPlusPlus_SNP/*")
-            resistomeanalyzer = file("${baseDir}/bin/resistome")
         }
         // Run resistome analyzer and count matrix creation
-        runresistome(bam_ch,amr, annotation, resistomeanalyzer )
+        runresistome(bam_ch,amr, annotation, resistomeanalyzer)
         resistomeresults(runresistome.out.resistome_counts.collect())
         // Add SNP confirmation
         if (params.snp == "Y") {
-            runsnp(bam_ch, resistomeresults.out.snp_count_matrix)
+            runsnp(bam_ch, resistomeresults.out.snp_count_matrix, amrsnp)
             snpresults(runsnp.out.snp_counts.collect(), "AMR")
         }
 }

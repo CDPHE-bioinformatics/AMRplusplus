@@ -11,16 +11,14 @@ workflow BAM_DEDUP_RESISTOME_WF {
 
     main:
         // download resistome and rarefactionanalyzer
+        resistomeanalyzer = file("${baseDir}/bin/resistome")
+        rarefactionanalyzer = file("${baseDir}/bin/rarefaction")
         if (file("${baseDir}/bin/AmrPlusPlus_SNP/SNP_Verification.py").isEmpty()){
             build_dependencies()
-            resistomeanalyzer = build_dependencies.out.resistomeanalyzer
-            rarefactionanalyzer = build_dependencies.out.rarefactionanalyzer
             amrsnp =  build_dependencies.out.amrsnp
         }
         else {
             amrsnp = file("${baseDir}/bin/AmrPlusPlus_SNP/*")
-            resistomeanalyzer = file("${baseDir}/bin/resistome")
-            rarefactionanalyzer = file("${baseDir}/bin/rarefaction")
         }
         runresistome_dedup(bam_ch,amr, annotation, resistomeanalyzer )
         resistomeresults_dedup(runresistome_dedup.out.resistome_counts.collect(),"dedup_AMR")
