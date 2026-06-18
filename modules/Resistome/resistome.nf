@@ -106,7 +106,7 @@ process resistomeresults {
         path("${prefix}_analytic_matrix.csv"), emit: snp_count_matrix, optional: true
 
     """
-    ${PYTHON3} $baseDir/bin/amr_long_to_wide.py -i ${resistomes} -o ${prefix}_analytic_matrix.csv
+    amr_long_to_wide.py -i ${resistomes} -o ${prefix}_analytic_matrix.csv
     """
 }
 
@@ -190,7 +190,7 @@ process plotrarefaction {
     """
     mkdir -p data/
     mv *.tsv data/
-    python $baseDir/bin/rfplot.py --dir ./data --nd --s --sd . --prefix ${prefix}
+    rfplot.py --dir ./data --nd --s --sd . --prefix ${prefix}
     """
 }
 
@@ -221,7 +221,7 @@ process runsnp {
 
     python3 SNP_Verification.py -c config.ini -t ${threads} -a true -i ${sample_id}.bam -o ${sample_id}.${prefix}_SNPs --count_matrix ${snp_count_matrix} --detailed_output=all
 
-    python3 $baseDir/bin/extract_snp_column.py \
+    extract_snp_column.py \
       --sample-id "${sample_id}" \
       --matrix "${sample_id}.${prefix}_SNPs${snp_count_matrix}" \
       --out-tsv "${sample_id}.SNP_confirmed_gene.tsv"
@@ -257,7 +257,7 @@ process dev_runsnp {
 
     python3 SNP_Verification.py -c config.ini -t ${threads} -a true -i ${sample_id}.bam -o ${sample_id}.${prefix}_SNPs --count_matrix ${snp_count_matrix} --detailed_output=all
 
-    python3 $baseDir/bin/extract_snp_column.py \
+    extract_snp_column.py \
       --sample-id "${sample_id}" \
       --matrix ${sample_id}.${prefix}_SNPs/"${sample_id}.${prefix}_SNPs${snp_count_matrix}" \
       --out-tsv "${sample_id}.SNP_confirmed_gene.tsv"
@@ -284,7 +284,7 @@ process snpresults {
 
     """
 
-    ${PYTHON3} $baseDir/bin/snp_long_to_wide.py -i ${snp_counts} -o SNPconfirmed_${prefix}_analytic_matrix.csv
+    snp_long_to_wide.py -i ${snp_counts} -o SNPconfirmed_${prefix}_analytic_matrix.csv
 
     """
 }

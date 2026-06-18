@@ -193,7 +193,7 @@ process krakenresults {
 	path("unclassifieds_kraken_analytic_matrix.conf_${kraken_confidence}.csv")
 
     """
-    ${PYTHON3} $baseDir/bin/kraken2_long_to_wide.py -i ${kraken_reports} -o kraken_analytic_matrix.conf_${kraken_confidence}.csv
+    kraken2_long_to_wide.py -i ${kraken_reports} -o kraken_analytic_matrix.conf_${kraken_confidence}.csv
     """
 }
 
