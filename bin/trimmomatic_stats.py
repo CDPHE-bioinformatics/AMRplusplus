@@ -37,10 +37,10 @@ def qc_stats(input_list, output_file):
         with open(f, 'r') as fp:
             sample_name = os.path.basename(str(fp.name)).split('.', 1)[0]
             for line in fp:
-                total = re.search('Input Read Pairs: (\d+)', line)
-                forward_surviving = re.search('Forward Only Surviving: (\d+)', line)
-                reverse_surviving = re.search('Reverse Only Surviving: (\d+)', line)
-                dropped = re.search('Dropped: (\d+)', line)
+                total = re.search(r'Input Read Pairs: (\d+)', line)
+                forward_surviving = re.search(r'Forward Only Surviving: (\d+)', line)
+                reverse_surviving = re.search(r'Reverse Only Surviving: (\d+)', line)
+                dropped = re.search(r'Dropped: (\d+)', line)
                 if total:
                     break
         fp.close()
