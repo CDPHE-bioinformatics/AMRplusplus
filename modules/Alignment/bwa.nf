@@ -19,9 +19,6 @@ process index {
     tag "Creating bwa index"
     label "micro"
 
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
-
     publishDir "${params.output}/Alignment/BWA_Index", mode: "copy"
 
     input:
@@ -41,9 +38,6 @@ process index {
 process bwa_align {
     tag "$pair_id"
     label "small"
-
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
 
     publishDir "${params.output}/Alignment/BAM_files", mode: "copy",
         saveAs: { filename ->
@@ -90,9 +84,6 @@ process bwa_merged_align {
 
     tag   { sample_id }
     label "small"
-
-    maxRetries 3
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
 
     publishDir "${params.output}/Alignment/BAM_files", mode: 'copy',
         saveAs: { fn ->
@@ -258,9 +249,6 @@ process bwa_rm_contaminant_fq {
     tag { pair_id }
     label "medium"
 
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3 
- 
     publishDir "${params.output}/HostRemoval", mode: "copy",
         saveAs: { filename ->
             if(filename.indexOf("fastq.gz") > 0) "NonHostFastq/$filename"
@@ -298,9 +286,6 @@ process bwa_rm_contaminant_merged_fq {
 
     tag   { sample_id }
     label "medium"
-
-    maxRetries 3
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
 
     publishDir "${params.output}/HostRemoval", mode: 'copy',
         saveAs: { fn ->
@@ -402,9 +387,6 @@ process bwa_rm_contaminant_se {
 process HostRemovalStats {
     tag { sample_id }
     label "micro"
-
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3 
 
     publishDir "${params.output}/Results", mode: "copy",
         saveAs: { filename ->

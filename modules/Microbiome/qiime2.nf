@@ -9,9 +9,6 @@ process Qiime2Import {
     tag { }
     label "small"
 
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
-
     publishDir "${params.output}/Qiime2Results", mode: "copy"
 
     input:
@@ -34,9 +31,6 @@ process Qiime2Dada2 {
     tag { }
     label "medium"
 
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
-
     publishDir "${params.output}/Qiime2Results", mode: "copy"
 
     input:
@@ -58,9 +52,6 @@ process Qiime2Classify {
     tag { }
     label "medium"
 
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
-
     publishDir "${params.output}/Qiime2Results", mode: "copy"
 
     input:
@@ -79,9 +70,6 @@ process Qiime2Classify {
 process Qiime2Filter {
     tag { }
     label "medium"
-
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
 
     publishDir "${params.output}/Qiime2Results", mode: "copy"
 
@@ -106,9 +94,6 @@ process Qiime2Tree {
     tag { }
     label "medium"
 
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
-
     publishDir "${params.output}/Qiime2Results/Tree", mode: "copy"
 
     input:
@@ -132,9 +117,6 @@ process Qiime2Export {
     tag { }
     label "medium"
 
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
-    
     publishDir "${params.output}/Qiime2Results/Exported", mode: "copy"
 
     input:

@@ -21,9 +21,6 @@ process runqc {
     tag { sample_id }
     label "micro_long"
 
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
-
     publishDir "${params.output}/QC_trimming", mode: 'copy', pattern: '*.fastq.gz',
         saveAs: { filename ->
             if(filename.indexOf("P.fastq.gz") > 0) "Paired/$filename"
@@ -89,9 +86,6 @@ process runqc_se {
 process QCstats {
     tag "Make QC summary file"
     label "small"
-
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
 
     publishDir "${params.output}/Results", mode: 'copy',
         saveAs: { filename ->

@@ -4,9 +4,6 @@ process fastqc {
     tag "FASTQC on $sample_id"
     label "micro"
 
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
-
     publishDir "${params.output}/QC_analysis/FastQC", mode: 'copy'
 
     input:
@@ -28,9 +25,6 @@ process multiqc {
     tag "Running multiQC"
     label "micro"
 
-    errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' }
-    maxRetries 3
-    
     publishDir "${params.output}/QC_analysis/", mode: 'copy',
         saveAs: { filename ->
             if(filename.indexOf("general_stats.txt") > 0) "MultiQC_stats/$filename"
